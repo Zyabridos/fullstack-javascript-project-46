@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { program } from 'commander';
 
 program
@@ -6,9 +8,9 @@ program
   .version('1.0')
   .option('-h, --help', 'output usage information')
   .option('-f, --format <type>', 'output format')
-  .argument('<first>', 'первая строка')
-  .argument('<second>', 'вторая строка');
+  .argument('<filepath1>', 'path to first file')
+  .argument('<filepath2>', 'path to second file');
 
-program.command('Here will be commands eventually');
+// program.command('Here will be commands eventually');
 
 program.parse();
