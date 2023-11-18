@@ -1,24 +1,52 @@
-// @ts-check
-/* eslint-disable no-console */
+import _ from 'lodash';
 
-import { program } from 'commander';
+function intersect(data1, data2) {
+  return Object.keys(data1).filter((k) => Object.hasOwn(data2, k));
+}
 
-const join = (first, second, connector = '') => `${first}${connector}${second}`;
+const gendiff = (data1, data2) => {
+  const keys1 = _.keys(data1);
+  const keys2 = _.keys(data2);
+  const values1 = _.values(data1);
+  const values2 = _.values(data2);
+  const entries1 = _.toPairs(data1);
+  const entries2 = _.toPairs(data2);
+  const keys = _.keys({ ...data1, ...data2 });
+  const entries = _.toPairs({ ...data1, ...data2 });
+  const result = {};
+  for (const [key, value] of entries) {
+    if (!Object.hasOwn(data1, key)) {
+      result[key] = `added ${value}`;
+    } else if (!Object.hasOwn(data2, key)) {
+      result[key] = `deleted ${value}`;
+    } else if ((data1[key] === data2[key]) && (data1[value] === data2[value])) {
+      result[key] = `unchnged ${value}`;
+    } else { result[keys1] = values1; }
+  }
+  return result;
+};
 
-program
-  .name('string-util')
-  .description('Инструмент для работы со строками')
-  .version('1.0.0');
+const data1 = {
+  host: 'hexlet.io',
+  timeout: 50,
+  proxy: '123.234.53.22',
+  follow: false,
+};
 
-program.command('join')
-  .description('Команда соединяет две строки в одну')
-  .argument('<first>', 'первая строка')
-  .argument('<second>', 'вторая строка')
-  .option('-c, --connector <type>', 'соединительная строка', '')
-  .action((first, second, options) => {
-    // BEGIN (write your solution here)
-    console.log(join(first, second, options.connector));
-    // END
-  });
+const data2 = {
+  timeout: 20,
+  verbose: true,
+  host: 'hexlet.io',
+};
 
-program.parse();
+console.log(gendiff(data1, data2));
+
+// for (const [key, value] of entries) {
+//   if (!Object.hasOwn(data1, key)) {
+//     result[key] = `added ${value}`;
+//   } else if (!Object.hasOwn(data2, key)) {
+//     result[key] = `deleted ${value}`;
+//   } else if ((data1[key] === data2[key]) && (data1[value] === data2[value])) {
+//     result[key] = `unchnged ${value}`
+//   } else result[key] = value;
+// }

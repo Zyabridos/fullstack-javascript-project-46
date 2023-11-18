@@ -1,31 +1,30 @@
-#!/usr/bin/env node
+function intersect(data1, data2) {
+  return Object.keys(data1).filter((k) => Object.hasOwn(data2, k));
+}
 
-// file: my.js
+function added(data1, data2) {
+  return Object.entries(data1).filter(([e, k]) => (Object.entries(data2, [e, k])) === (Object.entries(data1, [e, k])));
+}
 
-import { program } from 'commander';
+function deletedKeys(data1, data2) {
+  return Object.keys(data1).filter((k) => !Object.hasOwn(data2, k));
+}
 
-const hello = (name) => `Hello, ${name}!`;
-
-const command = (names, lower, upper) => {
-  for (const name of names) {
-    const msg = hello(name);
-    if (lower) {
-      console.log(msg.toLowerCase());
-    } else if (upper) {
-      console.log(msg.toUpperCase());
-    } else {
-      console.log(msg);
-    }
-  }
+const gendiff = (data1, data2) => {
+  deletedKeys(data1, data2);
 };
 
-program
-  .option('-l, --lower', 'only use lowercase letters')
-  .option('-u, --upper', 'only use uppercase letters')
-  .parse(process.argv);
+const data1 = {
+  host: 'hexlet.io',
+  timeout: 50,
+  proxy: '123.234.53.22',
+  follow: false,
+};
 
-const { args } = program;
-const options = program.opts();
-const { lower, upper } = options;
+const data2 = {
+  timeout: 20,
+  verbose: true,
+  host: 'hexlet.io',
+};
 
-command(args, lower, upper);
+console.log(gendiff(data1, data2));
