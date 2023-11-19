@@ -1,17 +1,27 @@
-#!/usr/bin/env node
+import _ from 'lodash';
 
-import { program } from 'commander';
+const added = (data1, data2) => _.toPairs(data2).filter(([key]) => !Object.hasOwn(data1, key));
 
-program
-  .name('gendiff')
-  .description('Compares two configuration files and shows a difference.')
-  .version('1.0')
-  .option('-h, --help', 'output usage information')
-  .option('-f, --format <type>', 'output format')
-  .argument('<filepath1>', 'path to first file')
-  .argument('<filepath2>', 'path to second file')
-  .action(filepath1, filepath2);
+const deleted = (data1, data2) => _.toPairs(data1).filter(([key]) => !Object.hasOwn(data2, key));
 
-// program.command('Here will be commands eventually');
+const unchanged = (data1, data2) => _.toPairs(data1).filter(([key]) => data1[key] === data2[key]);
 
-program.parse();
+const changed = (data1, data2) => _.toPairs(data1).filter(([key, value]) => data1[value] !== data2[value]);
+
+const data1 = {
+  host: 'hexlet.io',
+  timeout: 50,
+  proxy: '123.234.53.22',
+  follow: false,
+};
+
+const data2 = {
+  timeout: 20,
+  verbose: true,
+  host: 'hexlet.io',
+};
+
+console.log(added(data1, data2));
+console.log(deleted(data1, data2));
+console.log(unchanged(data1, data2));
+console.log(changed(data1, data2));
