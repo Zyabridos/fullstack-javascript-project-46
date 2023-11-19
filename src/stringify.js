@@ -1,17 +1,45 @@
-const stringify = (data, replacer = ' ', spacesCount = 1) => {
-  const result = {};
-  const entries = Object.entries(data);
+import _ from 'lodash';
+
+const stringify = (data, replacer = '', repeatReplacer = 1) => {
+  let objectToStr = '';
   if (typeof data === 'object') {
-    // return Object.entries(data).map(([key, value]) =>
-    // data[replacer.repeat(spacesCount) + key] = value);
-    for (const [key, value] of entries) {
-      result[replacer.repeat(spacesCount) + key] = value;
+    // return _.toPairs(data).map(([key, value]) =>
+    // objectToStr = `${replacer.repeat(spacesCount) + key} : ${value}\n`);
+    for (const [key, value] of _.toPairs(data)) {
+      objectToStr += `${replacer.repeat(repeatReplacer) + key}: ${value}\n`;
     }
-    return result;
+    return objectToStr;
   }
-  return `${replacer.repeat(spacesCount)}${data}`;
+  const stringWithoustQuotation = data.replaceAll("'", '');
+  return `${replacer.repeat(repeatReplacer)}${stringWithoustQuotation}`;
 };
 
-const data = { hello: 'world', is: true, nested: { count: 5 } };
+const data = {
+  hello: 'world',
+  is: true,
+};
+
+const nested = {
+  string: 'value',
+  boolean: true,
+  number: 5,
+  float: 1.25,
+  object: {
+    5: 'number',
+    1.25: 'float',
+    null: 'null',
+    true: 'boolean',
+    value: 'string',
+    nested: {
+      boolean: true,
+      float: 1.25,
+      string: 'value',
+      number: 5,
+      null: null,
+    },
+  },
+};
 console.log(stringify('Hello', '+', 5));
-console.log(stringify(data, ' - '));
+console.log(stringify('Hello'));
+console.log(stringify(data, '+', 2));
+console.log(stringify(nested, '* ', 6));
