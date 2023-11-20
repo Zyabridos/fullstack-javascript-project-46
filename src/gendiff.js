@@ -1,12 +1,33 @@
 import _ from 'lodash';
 
-const added = (data1, data2) => _.toPairs(data2).filter(([key]) => !Object.hasOwn(data1, key));
+const sortKeysAlphabetically = (data) => Object.keys(data).sort().reduce((obj, key) => {
+  obj[key] = data[key];
+  return obj;
+}, {});
 
-const deleted = (data1, data2) => _.toPairs(data1).filter(([key]) => !Object.hasOwn(data2, key));
+const genDiff = (data1, data2) => {
+  const sortedData1 = sortKeysAlphabetically(data1);
+  let result = '';
 
-const unchanged = (data1, data2) => _.toPairs(data1).filter(([key]) => data1[key] === data2[key]);
+  const entries = _.toPairs({ ...sortedData1, ...data2 });
 
-const changed = (data1, data2) => _.toPairs(data1).filter(([key, value]) => data1[value] !== data2[value]);
+  for (const [key, value] of entries) {
+    if (!Object.hasOwn(data1, key)) {
+      result += `${` + ${key}`}: ${value}\n`;
+    } else if (!Object.hasOwn(data2, key)) {
+      result += `${` - ${key}`}: ${value}\n`;
+    } else if (data1[key] === data2[key]) {
+      result += `${`   ${key}`}: ${value}\n`;
+    } else if (data1[key] !== data2[key]) {
+      const valueOfChangedFirstKey = data1[key];
+      const valueOfChangedSecondKey = data2[key];
+      result += `${` - ${key}`}: ${valueOfChangedFirstKey}\n`;
+      result += `${` + ${key}`}: ${valueOfChangedSecondKey}\n`;
+    }
+  }
+
+  return `{\n${result}}`;
+};
 
 const data1 = {
   host: 'hexlet.io',
@@ -21,7 +42,6 @@ const data2 = {
   host: 'hexlet.io',
 };
 
-console.log(added(data1, data2));
-console.log(deleted(data1, data2));
-console.log(unchanged(data1, data2));
-console.log(changed(data1, data2));
+console.log(genDiff(data1, data2));
+
+export default genDiff;
