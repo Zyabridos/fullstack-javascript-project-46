@@ -29,19 +29,19 @@ const genDiff = (data1, data2) => {
   return `{\n${result}}`;
 };
 
-const data1 = {
-  host: 'hexlet.io',
-  timeout: 50,
-  proxy: '123.234.53.22',
-  follow: false,
-};
+// const data1 = {
+//   host: 'hexlet.io',
+//   timeout: 50,
+//   proxy: '123.234.53.22',
+//   follow: false,
+// };
 
-const data2 = {
-  timeout: 20,
-  verbose: true,
-  host: 'hexlet.io',
-};
+// const data2 = {
+//   timeout: 20,
+//   verbose: true,
+//   host: 'hexlet.io',
+// };
 
-console.log(genDiff(data1, data2));
+// console.log(genDiff(data1, data2));
 
 export default genDiff;
