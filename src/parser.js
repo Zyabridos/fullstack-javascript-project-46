@@ -1,28 +1,44 @@
-import process from 'process';
-import path from 'path';
 import * as fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
 
-const filePath = '../__fixtures__/';
-const format = path.extname(filePath);
-// const data = fs.readFileSync(filePath, 'utf-8');
-const data = fs.readFileSync(path.resolve(process.cwd(), filePath));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-let parse;
-if (format === '.json') {
-  parse = JSON.parse;
-} else if (format === '.yaml') {
-  parse = yaml.safeLoad;
-}
+const setPathToJSONfiles = () => path.join(__dirname, '..', '__fixtures__', 'json');
+const setPathToYAMLfiles = () => path.join(__dirname, '..', '__fixtures__', 'yaml');
 
-parse(data);
+const pathToJSONfiles = setPathToJSONfiles();
+const pathToYAMLfiles = setPathToYAMLfiles();
 
-const jsonData1 = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'file1.json')));
+const jsonFileReader = (pathToElement) => {
+  const content = fs.readdirSync(pathToElement);
+  content.forEach((element) => {
+    const isDir = fs.lstatSync(path.join(pathToElement, element)).isDirectory();
+    if (isDir) {
+      jsonFileReader(path.join(pathToElement, element));
+    } else {
+      const fileContent = fs.readFileSync(path.join(pathToElement, element), 'utf-8');
+      const parsed = JSON.parse(fileContent);
+      console.log(parsed);
+    }
+  });
+};
 
-const jsonData2 = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'file2.json')));
+const yamlFileReader = (pathToElement) => {
+  const content = fs.readdirSync(pathToElement);
+  content.forEach((element) => {
+    const isDir = fs.lstatSync(path.join(pathToElement, element)).isDirectory();
+    if (isDir) {
+      jsonFileReader(path.join(pathToElement, element));
+    } else {
+      const fileContent = fs.readFileSync(path.join(pathToElement, element), 'utf-8');
+      const parsed = yaml.load(fileContent);
+      console.log(parsed);
+    }
+  });
+};
 
-const yamlData1 = yaml.load(fs.readFileSync(path.resolve(process.cwd(), 'file1.yaml')));
-
-const yamlData2 = yaml.load(fs.readFileSync(path.resolve(process.cwd(), 'file2.yaml')));
-
-console.log(path.extname(filePath));
+jsonFileReader(pathToJSONfiles);
+yamlFileReader(pathToYAMLfiles);
