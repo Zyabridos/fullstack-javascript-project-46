@@ -1,44 +1,21 @@
-import * as fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'fs';
 import yaml from 'js-yaml';
+import path from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const getPathFile = (absolutePath) => {
+  const format = path.extname(absolutePath);
+  const data = fs.readFileSync(absolutePath);
 
-const setPathToJSONfiles = () => path.join(__dirname, '..', '__fixtures__', 'json');
-const setPathToYAMLfiles = () => path.join(__dirname, '..', '__fixtures__', 'yaml');
-
-const pathToJSONfiles = setPathToJSONfiles();
-const pathToYAMLfiles = setPathToYAMLfiles();
-
-const jsonFileReader = (pathToElement) => {
-  const content = fs.readdirSync(pathToElement);
-  content.forEach((element) => {
-    const isDir = fs.lstatSync(path.join(pathToElement, element)).isDirectory();
-    if (isDir) {
-      jsonFileReader(path.join(pathToElement, element));
-    } else {
-      const fileContent = fs.readFileSync(path.join(pathToElement, element), 'utf-8');
-      const parsed = JSON.parse(fileContent);
-      console.log(parsed);
-    }
-  });
+  switch (format) {
+    case '.json':
+      return JSON.parse(data);
+    case '.yml':
+      return yaml.load(data);
+    case '.yaml':
+      return yaml.load(data);
+    default:
+      throw new Error(`Unknown format: '${format}'!`);
+  }
 };
 
-const yamlFileReader = (pathToElement) => {
-  const content = fs.readdirSync(pathToElement);
-  content.forEach((element) => {
-    const isDir = fs.lstatSync(path.join(pathToElement, element)).isDirectory();
-    if (isDir) {
-      jsonFileReader(path.join(pathToElement, element));
-    } else {
-      const fileContent = fs.readFileSync(path.join(pathToElement, element), 'utf-8');
-      const parsed = yaml.load(fileContent);
-      console.log(parsed);
-    }
-  });
-};
-
-jsonFileReader(pathToJSONfiles);
-yamlFileReader(pathToYAMLfiles);
+export default getPathFile;
