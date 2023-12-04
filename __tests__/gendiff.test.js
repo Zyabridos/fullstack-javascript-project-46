@@ -19,12 +19,17 @@ const secondYAML = yaml.load(readFile('file2.yaml'));
 const expectedStylishJSON = readFile('expectedStylishFormat.txt').toString();
 const expectedPlainJSON = readFile('expectedPlainFormat.txt').toString();
 
-test('comparing two stylish json', () => {
+test('comparing json', () => {
   expect(genDiffStylish(firstJSON, secondJSON))
     .toBe(expectedStylishJSON);
+  expect(genDiffPlain(firstJSON, secondJSON))
+    .toBe(expectedPlainJSON);
 });
 
-test('comparing two plain json', () => {
-  expect(genDiffPlain(firstJSON, secondJSON))
+// тесты на yaml плывут
+test('comparing yaml', () => {
+  expect(genDiffStylish(firstYAML, secondYAML))
+    .toBe(expectedStylishJSON);
+  expect(genDiffPlain(firstYAML, secondYAML))
     .toBe(expectedPlainJSON);
 });
