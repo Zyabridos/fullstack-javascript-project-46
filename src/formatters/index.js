@@ -8,9 +8,9 @@ export default (file1, file2, formatName) => {
     case 'plain':
       return genDiffPlain(file1, file2);
     default:
-      return 'cdcd';
-      // throw new Error(`Unknown option: ${type}.\n
-      // usage: genDiff  [-v | --version]\n
-      //                 [-h | --help]\n`);
+      // return 'cdcd';
+      throw new Error(`Unknown option: ${formatName}.\n
+      usage: genDiff  [-v | --version]\n
+                      [-h | --help]\n`);
   }
 };
