@@ -16,12 +16,12 @@ const secondJSON = yaml.load(readFile('file2.json'));
 const firstYAML = yaml.load(readFile('file1.yaml'));
 const secondYAML = yaml.load(readFile('file2.yaml'));
 
-const expectedJSON = readFile('expectedJSON.txt').toString();
-const expectedPlainJSON = readFile('expectedPlainFormat.txt');
+const expectedStylishJSON = readFile('expectedStylishFormat.txt').toString();
+const expectedPlainJSON = readFile('expectedPlainFormat.txt').toString();
 
 test('comparing two stylish json', () => {
   expect(genDiffStylish(firstJSON, secondJSON))
-    .toBe(expectedJSON);
+    .toBe(expectedStylishJSON);
 });
 
 test('comparing two plain json', () => {
