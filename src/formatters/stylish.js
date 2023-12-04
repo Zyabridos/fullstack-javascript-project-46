@@ -23,11 +23,7 @@ const stringify = (value, spacesCount) => {
   return iter(value, 1);
 };
 
-const genDiff = (file1, file2) => {
-  const added = '+';
-  const deleted = '-';
-  const unchanged = ' ';
-
+const genDiffStylish = (file1, file2) => {
   const iter = (objectOfFile1, objectOfFile2, spaceCount = 2) => {
     const currentIndent = ' '.repeat(spaceCount);
     const bracketIndent = ' '.repeat(spaceCount - 2);
@@ -38,22 +34,22 @@ const genDiff = (file1, file2) => {
         const value2 = objectOfFile2[key];
 
         if (!_.has(objectOfFile2, key)) {
-          return `${currentIndent}${deleted} ${key}: ${stringify(value1, spaceCount)}`;
+          return `${currentIndent}- ${key}: ${stringify(value1, spaceCount)}`;
         }
 
         if (!_.has(objectOfFile1, key)) {
-          return `${currentIndent}${added} ${key}: ${stringify(value2, spaceCount)}`;
+          return `${currentIndent}+ ${key}: ${stringify(value2, spaceCount)}`;
         }
 
         if (_.isObject(value1) && _.isObject(value2)) {
-          return `${currentIndent}${unchanged} ${key}: ${iter(value1, value2, spaceCount + 4)}`;
+          return `${currentIndent}  ${key}: ${iter(value1, value2, spaceCount + 4)}`;
         }
 
         if (value1 !== value2) {
-          return [`${currentIndent}${deleted} ${key}: ${stringify(value1, spaceCount)}\n${currentIndent}${added} ${key}: ${value2}`];
+          return [`${currentIndent}- ${key}: ${stringify(value1, spaceCount)}\n${currentIndent}+ ${key}: ${value2}`];
         }
 
-        return `${currentIndent}${unchanged} ${key}: ${value2}`;
+        return `${currentIndent}  ${key}: ${value2}`;
       });
 
     return [
@@ -64,15 +60,6 @@ const genDiff = (file1, file2) => {
   };
 
   return iter(file1, file2);
-};
-
-const cdcd = (parseFile1, parseFile2, type) => {
-  switch (type) {
-    case 'stylish':
-      return genDiff(parseFile1, parseFile2);
-    default:
-      throw new Error('Output format is not correct');
-  }
 };
 
 const data1 = {
@@ -147,8 +134,6 @@ const data4 = {
   },
 };
 
+// console.log(genDiffStylish(data3, data4));
 // console.log(genDiff(data1, data2));
-
-console.log(genDiff(data3, data4));
-// console.log(stringify(data3, 5));
-export default genDiff;
+export default genDiffStylish;
