@@ -1,6 +1,9 @@
 install-deps:
 	npm ci
 
+test:
+	npm test
+
 gendiff:
 	node bin/gendiff.js
 

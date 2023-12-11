@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _ from 'lodash';
 
 const getValueOf = (value) => {
   if (typeof (value) === 'string') {
