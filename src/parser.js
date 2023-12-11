@@ -1,11 +1,6 @@
-import fs from 'fs';
 import yaml from 'js-yaml';
-import path from 'path';
 
-const getPathFile = (absolutePath) => {
-  const format = path.extname(absolutePath);
-  const data = fs.readFileSync(absolutePath);
-
+export default (absolutePath) => {
   switch (format) {
     case '.json':
       return JSON.parse(data);
@@ -17,5 +12,3 @@ const getPathFile = (absolutePath) => {
       throw new Error(`Unknown format: '${format}'!`);
   }
 };
-
-export default getPathFile;
