@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import genDiff from '../src/formatters/index.js';
+import genDiff from '../src/main.js';
 
 const program = new Command();
 
@@ -18,3 +18,5 @@ program
   });
 
 program.parse();
+
+// node bin/gendiff.js __fixtures__/file1.json __fixtures__/file2.json
