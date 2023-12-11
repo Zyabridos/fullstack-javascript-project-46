@@ -7,7 +7,7 @@ jobs:
       - uses: remarkablemark/setup-codeclimate@v2
       - run: |
           cc-test-reporter before-build
-          npm test
+          npx jest
           cc-test-reporter after-build --exit-code $?
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
