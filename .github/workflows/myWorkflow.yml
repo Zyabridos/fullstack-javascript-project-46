@@ -1,0 +1,13 @@
+name: myWorkflow
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install reprository
+        uses: actions/checkout@v4      
+      - run: make install
+      - name: Run test and eslint
+        uses: actions/checkout@v4   
+      - run: make lint
+      - run: make test
