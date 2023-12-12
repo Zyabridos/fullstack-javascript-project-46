@@ -1,9 +1,7 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Zyabridos/fullstack-javascript-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Zyabridos/fullstack-javascript-project-46/actions)
-![Maintainability](https://api.codeclimate.com/v1/badges/9a5686e6d3dd82a19944/maintainability)
-(https://codeclimate.com/github/Zyabridos/fullstack-javascript-project-46/maintainability)
-![Test_Coverage](https://api.codeclimate.com/v1/badges/9a5686e6d3dd82a19944/test_coverage)
-(https://codeclimate.com/github/Zyabridos/fullstack-javascript-project-46/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/9a5686e6d3dd82a19944/maintainability)](https://codeclimate.com/github/Zyabridos/fullstack-javascript-project-46/maintainability)
+[![Test_Coverage](https://api.codeclimate.com/v1/badges/9a5686e6d3dd82a19944/test_coverage)](https://codeclimate.com/github/Zyabridos/fullstack-javascript-project-46/test_coverage)
 
 ### Description of the project
 This projects was created to compare differences in two files. The program can work with two file extensions: .yaml and .JSON. You can get the output in three different formats:
