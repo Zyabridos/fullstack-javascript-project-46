@@ -1,9 +1,6 @@
 install-deps:
 	npm ci
 
-test:
-	npm test
-
 gendiff:
 	node bin/gendiff.js
 
@@ -12,4 +9,6 @@ publish:
 	
 lint:
 	npx eslint .
-	
+
+test:
+	npm test
