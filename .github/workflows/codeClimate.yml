@@ -1,13 +1,10 @@
-name: codeClimate test
-on: push
+name: Lint
+
+on: [push]
+
 jobs:
-  test:
+  eslint:
     runs-on: ubuntu-latest
     steps:
-      - uses: remarkablemark/setup-codeclimate@v2
-      - run: |
-          cc-test-reporter before-build
-          npx jest
-          cc-test-reporter after-build --exit-code $?
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      - uses: actions/checkout@v1
+      - uses: stefanoeb/eslint-action@1.0.2
