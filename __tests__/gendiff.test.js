@@ -26,7 +26,6 @@ test('comparing json', () => {
     .toBe(expectedPlainJSON);
 });
 
-// тесты на yaml плывут
 test('comparing yaml', () => {
   expect(genDiffStylish(firstYAML, secondYAML))
     .toBe(expectedStylishJSON);
