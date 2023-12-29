@@ -2,7 +2,7 @@ import genDiff from './main.js';
 import parser from './parser.js';
 import { getFileData, getFileExt, getAbsolutePath } from './utils.js';
 
-export default (filepath1, filepath2, formatName = 'stylish') => {
+export default (filepath1, filepath2, formatName) => {
   const absolutePath1 = getAbsolutePath(filepath1);
   const fileExtension1 = getFileExt(filepath1);
   const fileData1 = getFileData(filepath1);
