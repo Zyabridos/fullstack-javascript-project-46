@@ -10,28 +10,27 @@ const getValueOf = (value) => {
   return '[complex value]';
 };
 
-const genDiffPlain = (file1, file2) => {
+const genDiffPlain = (astTree) => {
   const property = 'Property';
 
-  const iter = (parseObj1, parseObj2, path) => {
-    const result = _.sortBy(_.union(_.keys(parseObj1), _.keys(parseObj2)))
+  const iter = (parsedObj, path) => {
+    const result = parsedObj
       .map((key) => {
-        const value1 = parseObj1[key];
-        const value2 = parseObj2[key];
-        const fullKey = `${path}${key}`;
-        if (!_.has(parseObj2, key)) {
+        const fullKey = `${path}${key.key}`;
+        if (key.status === 'deleted') {
           return `${property} '${fullKey}' was removed`;
         }
 
-        if (!_.has(parseObj1, key)) {
-          return `${property} '${fullKey}' was added with value: ${getValueOf(value2)}`;
+        if (key.status === 'added') {
+          return `${property} '${fullKey}' was added with value: ${getValueOf(key.firstValue)}`;
         }
 
-        if (value1 !== value2) {
-          if (_.isObject(value1) && _.isObject(value2)) {
-            return iter(value1, value2, `${fullKey}.`);
-          }
-          return `${property} '${fullKey}' was updated. From ${getValueOf(value1)} to ${getValueOf(value2)}`;
+        if (key.status === 'nested') {
+          return iter(key.children, `${fullKey}.`);
+        }
+
+        if (key.status === 'changed') {
+          return `${property} '${fullKey}' was updated. From ${getValueOf(key.firstValue)} to ${getValueOf(key.secondValue)}`;
         }
 
         return null;
@@ -42,7 +41,68 @@ const genDiffPlain = (file1, file2) => {
       .join('\n');
   };
 
-  return iter(file1, file2, '');
+  return iter(astTree, '');
 };
 
 export default genDiffPlain;
+
+const file1 = {
+  common: {
+    setting1: 'Value 1',
+    setting2: 200,
+    setting3: true,
+    setting6: {
+      key: 'value',
+      doge: {
+        wow: '',
+      },
+    },
+  },
+  group1: {
+    baz: 'bas',
+    foo: 'bar',
+    nest: {
+      key: 'value',
+    },
+  },
+  group2: {
+    abc: 12345,
+    deep: {
+      id: 45,
+    },
+  },
+};
+
+const file2 = {
+  common: {
+    follow: false,
+    setting1: 'Value 1',
+    setting3: null,
+    setting4: 'blah blah',
+    setting5: {
+      key5: 'value5',
+    },
+    setting6: {
+      key: 'value',
+      ops: 'vops',
+      doge: {
+        wow: 'so much',
+      },
+    },
+  },
+  group1: {
+    foo: 'bar',
+    baz: 'bars',
+    nest: 'str',
+  },
+  group3: {
+    deep: {
+      id: {
+        number: 45,
+      },
+    },
+    fee: 100500,
+  },
+};
+
+console.log(genDiffPlain(file1, file2));
