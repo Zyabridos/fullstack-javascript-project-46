@@ -1,13 +1,14 @@
-import _ from 'lodash';
-
 const getValueOf = (value) => {
-  if (typeof (value) === 'string') {
-    return `'${value}'`;
+  switch (typeof (value)) {
+    case 'string':
+      return `'${value}'`;
+    case 'boolean':
+      return value;
+    case null:
+      return value;
+    default:
+      return '[complex value]';
   }
-  if (typeof (value) === 'boolean' || value == null) {
-    return value;
-  }
-  return '[complex value]';
 };
 
 const genDiffPlain = (astTree) => {
@@ -17,23 +18,18 @@ const genDiffPlain = (astTree) => {
     const result = parsedObj
       .map((key) => {
         const fullKey = `${path}${key.key}`;
-        if (key.status === 'deleted') {
-          return `${property} '${fullKey}' was removed`;
+        switch (key.status) {
+          case 'deleted':
+            return `${property} '${fullKey}' was removed`;
+          case 'added':
+            return `${property} '${fullKey}' was added with value: ${getValueOf(key.firstValue)}`;
+          case 'nested':
+            return iter(key.children, `${fullKey}.`);
+          case 'changed':
+            return `${property} '${fullKey}' was updated. From ${getValueOf(key.firstValue)} to ${getValueOf(key.secondValue)}`;
+          default:
+            return null;
         }
-
-        if (key.status === 'added') {
-          return `${property} '${fullKey}' was added with value: ${getValueOf(key.firstValue)}`;
-        }
-
-        if (key.status === 'nested') {
-          return iter(key.children, `${fullKey}.`);
-        }
-
-        if (key.status === 'changed') {
-          return `${property} '${fullKey}' was updated. From ${getValueOf(key.firstValue)} to ${getValueOf(key.secondValue)}`;
-        }
-
-        return null;
       });
 
     return [...result]
