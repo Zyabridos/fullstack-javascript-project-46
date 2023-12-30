@@ -5,18 +5,18 @@ const makeAstTree = (data1, data2) => _.sortBy(_.union(_.keys(data1), _.keys(dat
     const firstValue = data1[key];
     const secondValue = data2[key];
 
-    if (!_.has(data1, key)) {
-      return {
-        status: 'added',
-        key,
-        secondValue,
-      };
-    }
     if (!_.has(data2, key)) {
       return {
         status: 'deleted',
         key,
         firstValue,
+      };
+    }
+    if (!_.has(data1, key)) {
+      return {
+        status: 'added',
+        key,
+        secondValue,
       };
     }
     if (_.isObject(firstValue) && _.isObject(secondValue)) {
@@ -36,8 +36,8 @@ const makeAstTree = (data1, data2) => _.sortBy(_.union(_.keys(data1), _.keys(dat
     }
     return {
       status: 'unchanged',
-      key,
       firstValue,
+      key,
     };
   });
 

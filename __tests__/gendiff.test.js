@@ -3,8 +3,7 @@ import * as path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
-import genDiffPlain from '../src/formatters/plain.js';
-import genDiffStylish from '../src/formatters/stylish.js';
+import genDiff from '../src/index.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
@@ -20,15 +19,15 @@ const expectedStylishJSON = readFile('expectedStylishFormat.txt').toString();
 const expectedPlainJSON = readFile('expectedPlainFormat.txt').toString();
 
 test('comparing json', () => {
-  expect(genDiffStylish(firstJSON, secondJSON))
+  expect(genDiff(firstJSON, secondJSON))
     .toBe(expectedStylishJSON);
-  expect(genDiffPlain(firstJSON, secondJSON))
+  expect(genDiff(firstJSON, secondJSON))
     .toBe(expectedPlainJSON);
 });
 
 test('comparing yaml', () => {
-  expect(genDiffStylish(firstYAML, secondYAML))
+  expect(genDiff(firstYAML, secondYAML))
     .toBe(expectedStylishJSON);
-  expect(genDiffPlain(firstYAML, secondYAML))
+  expect(genDiff(firstYAML, secondYAML))
     .toBe(expectedPlainJSON);
 });

@@ -1,13 +1,13 @@
 import _ from 'lodash';
 
-const countSpaces = (depth, symbol) => {
-  if (!symbol) {
-    return '    '.repeat(depth);
-  }
-  if (depth === 0 && !symbol) {
+const makeSpace = (depthLevel, symbol) => {
+  if (depthLevel === 0 && !symbol) {
     return '';
   }
-  return `${'    '.repeat(depth)}  ${symbol}`;
+  if (!symbol) {
+    return '    '.repeat(depthLevel);
+  }
+  return `${'    '.repeat(depthLevel)}  ${symbol}`;
 };
 
 const stringify = (value, spacesCount) => {
@@ -34,27 +34,27 @@ const stringify = (value, spacesCount) => {
 };
 
 const genDiffStylish = (tree) => {
-  const iter = (object, depth) => {
+  const iter = (object, depthLevel) => {
     const result = object.map((key) => {
       switch (key.status) {
         case 'deleted':
-          return `${countSpaces(depth, '- ')}${key.key}: ${stringify(key.oldValue, depth)}`;
+          return `${makeSpace(depthLevel, '- ')}${key.key}: ${stringify(key.firstValue, depthLevel)}`;
         case 'added':
-          return `${countSpaces(depth, '+ ')}${key.key}: ${stringify(key.newValue, depth)}`;
+          return `${makeSpace(depthLevel, '+ ')}${key.key}: ${stringify(key.secondValue, depthLevel)}`;
         case 'nested':
-          return `${countSpaces(depth, '  ')}${key.key}: ${iter(key.children, depth + 1)}`;
+          return `${makeSpace(depthLevel, '  ')}${key.key}: ${iter(key.children, depthLevel + 1)}`;
         case 'changed':
-          return [`${countSpaces(depth, '- ')}${key.key}: ${stringify(key.oldValue, depth)}\n
-          ${countSpaces(depth, '+ ')}${key.key}: ${stringify(key.newValue, depth)}`];
+          return [`${makeSpace(depthLevel, '- ')}${key.key}: ${stringify(key.firstValue, depthLevel)}\n
+          ${makeSpace(depthLevel, '+ ')}${key.key}: ${stringify(key.secondValue, depthLevel)}`];
         default:
-          return `${countSpaces(depth, '  ')}${key.key}: ${stringify(key.oldValue, depth)}`;
+          return `${makeSpace(depthLevel, '  ')}${key.key}: ${stringify(key.firstValue, depthLevel)}`;
       }
     });
 
     return [
       '{',
       ...result,
-      `${countSpaces(depth)}}`]
+      `${makeSpace(depthLevel)}}`]
       .join('\n');
   };
 

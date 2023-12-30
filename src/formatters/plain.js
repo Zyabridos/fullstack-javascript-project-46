@@ -11,18 +11,19 @@ const getValueOf = (value) => {
   }
 };
 
-const genDiffPlain = (astTree) => {
+export default (astTree) => {
   const property = 'Property';
 
   const iter = (parsedObj, path) => {
     const result = parsedObj
       .map((key) => {
         const fullKey = `${path}${key.key}`;
+
         switch (key.status) {
           case 'deleted':
             return `${property} '${fullKey}' was removed`;
           case 'added':
-            return `${property} '${fullKey}' was added with value: ${getValueOf(key.firstValue)}`;
+            return `${property} '${fullKey}' was added with value: ${getValueOf(key.secondValue)}`;
           case 'nested':
             return iter(key.children, `${fullKey}.`);
           case 'changed':
@@ -39,5 +40,3 @@ const genDiffPlain = (astTree) => {
 
   return iter(astTree, '');
 };
-
-export default genDiffPlain;
