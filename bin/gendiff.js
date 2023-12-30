@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-import { Command } from 'commander';
+// import { Command } from 'commander';
+import { program } from 'commander';
 import genDiff from '../src/index.js';
 
-const program = new Command();
+// const program = new Command();
 
 program
   .name('gendiff')
@@ -20,3 +21,4 @@ program
 program.parse();
 
 // node bin/gendiff.js __fixtures__/file1.json __fixtures__/file2.json
+// node bin/gendiff.js --format plain __fixtures__/file1.json __fixtures__/file2.json

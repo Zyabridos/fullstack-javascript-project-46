@@ -1,5 +1,15 @@
 import _ from 'lodash';
 
+const countSpaces = (depth, symbol) => {
+  if (!symbol) {
+    return '    '.repeat(depth);
+  }
+  if (depth === 0 && !symbol) {
+    return '';
+  }
+  return `${'    '.repeat(depth)}  ${symbol}`;
+};
+
 const stringify = (value, spacesCount) => {
   const iter = (currentValue, depth) => {
     if (!_.isObject(currentValue)) {
@@ -24,28 +34,27 @@ const stringify = (value, spacesCount) => {
 };
 
 const genDiffStylish = (tree) => {
-  const iter = (object, spaceCount = 2) => {
-    const currentIndent = ' '.repeat(spaceCount);
-    const bracketIndent = ' '.repeat(spaceCount - 2);
+  const iter = (object, depth) => {
     const result = object.map((key) => {
-      switch (key.action) {
+      switch (key.status) {
         case 'deleted':
-          return `${currentIndent}- ${key}: ${stringify(key.oldValue, spaceCount)}`;
+          return `${countSpaces(depth, '- ')}${key.key}: ${stringify(key.oldValue, depth)}`;
         case 'added':
-          return `${currentIndent}+ ${key}: ${stringify(key.newValue, spaceCount)}`;
+          return `${countSpaces(depth, '+ ')}${key.key}: ${stringify(key.newValue, depth)}`;
         case 'nested':
-          return `${currentIndent}  ${key}: ${iter(key.children, spaceCount + 4)}`;
+          return `${countSpaces(depth, '  ')}${key.key}: ${iter(key.children, depth + 1)}`;
         case 'changed':
-          return [`${currentIndent}- ${key}: ${stringify(key.oldValue, spaceCount)}\n${currentIndent}+ ${key}: ${key.newValue}`];
+          return [`${countSpaces(depth, '- ')}${key.key}: ${stringify(key.oldValue, depth)}\n
+          ${countSpaces(depth, '+ ')}${key.key}: ${stringify(key.newValue, depth)}`];
         default:
-          return `${currentIndent}  ${key}: ${key.oldValue}`;
+          return `${countSpaces(depth, '  ')}${key.key}: ${stringify(key.oldValue, depth)}`;
       }
     });
 
     return [
       '{',
       ...result,
-      `${bracketIndent}}`]
+      `${countSpaces(depth)}}`]
       .join('\n');
   };
 

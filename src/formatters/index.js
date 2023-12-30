@@ -2,7 +2,14 @@ import genDiffPlain from './plain.js';
 import genDiffStylish from './stylish.js';
 import makeAstTree from '../makeAstTree.js';
 
-const getFormatName = (formatName = 'stylish') => formatName;
+// const getFormatName = (formatName = 'stylish') => formatName;
+
+const getFormatName = (formatName) => {
+  if (formatName === undefined) {
+    return 'stylish';
+  }
+  return formatName;
+};
 
 export default (filepath1, filepath2, formatName) => {
   const diffStylishTree = makeAstTree(filepath1, filepath2);
@@ -11,13 +18,14 @@ export default (filepath1, filepath2, formatName) => {
       return genDiffStylish(filepath1, filepath2);
     case 'plain':
       return genDiffPlain(filepath1, filepath2);
-    case 'json':
-      return JSON.stringify(diffStylishTree);
-    case 'JSON':
-      return JSON.stringify(diffStylishTree);
+    // case 'json':
+    //   return JSON.stringify(diffStylishTree);
+    // case 'JSON':
+    //   return JSON.stringify(diffStylishTree);
     default:
       throw new Error(`Unknown option: ${formatName}.\n
       usage: genDiff  [-v | --version]\n
                       [-h | --help]\n`);
+    // default: return genDiffStylish(filepath1, filepath2);
   }
 };
