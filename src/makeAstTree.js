@@ -2,41 +2,41 @@ import _ from 'lodash';
 
 const makeAstTree = (data1, data2) => _.sortBy(_.union(_.keys(data1), _.keys(data2)))
   .map((key) => {
-    const firstValue = data1[key];
-    const secondValue = data2[key];
+    const value1 = data1[key];
+    const value2 = data2[key];
 
     if (!_.has(data2, key)) {
       return {
         status: 'deleted',
         key,
-        firstValue,
+        value1,
       };
     }
     if (!_.has(data1, key)) {
       return {
         status: 'added',
         key,
-        secondValue,
+        value2,
       };
     }
-    if (_.isObject(firstValue) && _.isObject(secondValue)) {
+    if (_.isObject(value1) && _.isObject(value2)) {
       return {
         status: 'nested',
         key,
-        children: makeAstTree(firstValue, secondValue),
+        children: makeAstTree(value1, value2),
       };
     }
-    if (firstValue !== secondValue) {
+    if (value1 !== value2) {
       return {
         status: 'changed',
         key,
-        firstValue,
-        secondValue,
+        value1,
+        value2,
       };
     }
     return {
       status: 'unchanged',
-      firstValue,
+      value1,
       key,
     };
   });

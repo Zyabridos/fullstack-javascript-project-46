@@ -1,5 +1,5 @@
-import genDiffPlain from './plain.js';
 import genDiffStylish from './stylish.js';
+import genDiffPlain from './plain.js';
 import makeAstTree from '../makeAstTree.js';
 
 export default (parseFile1, parseFile2, formatName = 'stylish') => {
@@ -12,7 +12,7 @@ export default (parseFile1, parseFile2, formatName = 'stylish') => {
     case 'json':
       return JSON.stringify(astTree);
     default:
-      throw new Error(`Unknown option: ${formatName}.\n
+      throw new Error(`Unknown format\n
       usage: genDiff  [-v | --version]\n
                       [-h | --help]\n`);
   }

@@ -9,6 +9,6 @@ export default (data, format) => {
     case 'yml':
       return yaml.load(data);
     default:
-      throw new Error(`Format file ${data} is not correct`);
+      throw new Error('Format file is not correct');
   }
 };

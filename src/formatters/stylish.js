@@ -1,64 +1,58 @@
 import _ from 'lodash';
 
-const makeSpace = (depthLevel, symbol) => {
-  if (depthLevel === 0 && !symbol) {
-    return '';
-  }
-  if (!symbol) {
-    return '    '.repeat(depthLevel);
-  }
-  return `${'    '.repeat(depthLevel)}  ${symbol}`;
+const getIndent = (depth, replacer = ' ', spacesCount = 4) => replacer.repeat((depth * spacesCount) - 2);
+
+const getBracketIndent = (depth, replacer = ' ', spacesCount = 4) => replacer.repeat((depth * spacesCount) - spacesCount);
+
+const doStringify = (value, depth = 1) => {
+  if (!_.isPlainObject(value)) return `${value}`;
+
+  const currentIndent = getIndent(depth);
+  const bracketIndent = getBracketIndent(depth);
+
+  const currentValue = Object.entries(value);
+
+  const lines = currentValue.map(([key, val]) => `${currentIndent}  ${key}: ${doStringify(val, depth + 1)}`);
+
+  const result = ['{', ...lines, `${bracketIndent}}`].join('\n');
+
+  return result;
 };
 
-const stringify = (value, spacesCount) => {
-  const iter = (currentValue, depth) => {
-    if (!_.isObject(currentValue)) {
-      return `${currentValue}`;
-    }
+const genDiffStylish = (diff) => {
+  const iter = (currentValue, depth = 1) => {
+    const currentIndent = getIndent(depth);
+    const bracketIndent = getBracketIndent(depth);
 
-    const indentSize = spacesCount + depth * 4;
-    const currentIndent = ' '.repeat(indentSize);
-    const bracketIndent = ' '.repeat(indentSize - 2);
-    const lines = Object
-      .entries(currentValue)
-      .map(([key, val]) => `  ${currentIndent}${key}: ${iter(val, depth + 1)}`);
-
-    return [
-      '{',
-      ...lines,
-      `${bracketIndent}}`,
-    ].join('\n');
-  };
-
-  return iter(value, 1);
-};
-
-const genDiffStylish = (tree) => {
-  const iter = (object, depthLevel) => {
-    const result = object.map((key) => {
-      switch (key.status) {
-        case 'deleted':
-          return `${makeSpace(depthLevel, '- ')}${key.key}: ${stringify(key.firstValue, depthLevel)}`;
-        case 'added':
-          return `${makeSpace(depthLevel, '+ ')}${key.key}: ${stringify(key.secondValue, depthLevel)}`;
+    const lines = currentValue.flatMap((node) => {
+      switch (node.status) {
         case 'nested':
-          return `${makeSpace(depthLevel, '  ')}${key.key}: ${iter(key.children, depthLevel + 1)}`;
+          return `${currentIndent}  ${node.key}: ${iter(node.children, depth + 1)}`;
+
+        case 'deleted':
+          return `${currentIndent}- ${node.key}: ${doStringify(node.value1, depth + 1)}`;
+
+        case 'added':
+          return `${currentIndent}+ ${node.key}: ${doStringify(node.value2, depth + 1)}`;
+
+        case 'unchanged':
+          return `${currentIndent}  ${node.key}: ${doStringify(node.value1, depth + 1)}`;
+
         case 'changed':
-          return [`${makeSpace(depthLevel, '- ')}${key.key}: ${stringify(key.firstValue, depthLevel)}\n
-          ${makeSpace(depthLevel, '+ ')}${key.key}: ${stringify(key.secondValue, depthLevel)}`];
+          return [
+            `${currentIndent}- ${node.key}: ${doStringify(node.value1, depth + 1)}`,
+            `${currentIndent}+ ${node.key}: ${doStringify(node.value2, depth + 1)}`,
+          ];
+
         default:
-          return `${makeSpace(depthLevel, '  ')}${key.key}: ${stringify(key.firstValue, depthLevel)}`;
+          throw new Error(`Unknown type: ${node.status}!`);
       }
     });
 
-    return [
-      '{',
-      ...result,
-      `${makeSpace(depthLevel)}}`]
-      .join('\n');
+    return ['{', ...lines, `${bracketIndent}}`].join('\n');
   };
 
-  return iter(tree, 0);
+  return iter(diff);
 };
 
 export default genDiffStylish;
