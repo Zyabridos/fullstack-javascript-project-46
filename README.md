@@ -21,4 +21,4 @@ $ git clone https://github.com/Zyabridos/fullstack-javascript-project-46
 $ make install
 
 ### Demonstration of comparing two JSON files:
-[![asciicast](https://asciinema.org/a/l5zGakQAkO66I7a4GKELrDZqI.svg)](https://asciinema.org/a/l5zGakQAkO66I7a4GKELrDZqI)
+[![asciicast](https://asciinema.org/a/CXCLBcphIsaYzrSTVk6vlDL4A.svg)](https://asciinema.org/a/CXCLBcphIsaYzrSTVk6vlDL4A)

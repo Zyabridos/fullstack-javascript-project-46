@@ -1,58 +1,72 @@
 import _ from 'lodash';
 
-const getIndent = (depth, replacer = ' ', spacesCount = 4) => replacer.repeat((depth * spacesCount) - 2);
-
-const getBracketIndent = (depth, replacer = ' ', spacesCount = 4) => replacer.repeat((depth * spacesCount) - spacesCount);
-
-const doStringify = (value, depth = 1) => {
-  if (!_.isPlainObject(value)) return `${value}`;
-
-  const currentIndent = getIndent(depth);
-  const bracketIndent = getBracketIndent(depth);
-
-  const currentValue = Object.entries(value);
-
-  const lines = currentValue.map(([key, val]) => `${currentIndent}  ${key}: ${doStringify(val, depth + 1)}`);
-
-  const result = ['{', ...lines, `${bracketIndent}}`].join('\n');
-
-  return result;
+const makeIndent = (depth, replacer = ' ', spacesCount = 4) => {
+  const indent = (depth * spacesCount);
+  return replacer.repeat(indent - 2);
 };
 
-const genDiffStylish = (diff) => {
-  const iter = (currentValue, depth = 1) => {
-    const currentIndent = getIndent(depth);
-    const bracketIndent = getBracketIndent(depth);
+const makeBracketIndent = (depth, replacer = ' ', spacesCount = 4) => {
+  const indent = (depth * spacesCount);
+  return replacer.repeat(indent - spacesCount);
+};
 
-    const lines = currentValue.flatMap((node) => {
-      switch (node.status) {
+const stringify = (value, depth = 1) => {
+  if (!_.isObject(value)) {
+    return `${value}`;
+  }
+
+  const currentIndent = makeIndent(depth);
+  const bracketIndent = makeBracketIndent(depth);
+
+  const lines = Object
+    .entries(value)
+    .map(([key, val]) => `${currentIndent}  ${key}: ${stringify(val, depth + 1)}`);
+
+  return [
+    '{',
+    ...lines,
+    `${bracketIndent}}`]
+    .join('\n');
+};
+
+const genDiffStylish = (astTree) => {
+  const iter = (currentValue, depth = 1) => {
+    const currentIndent = makeIndent(depth);
+    const bracketIndent = makeBracketIndent(depth);
+
+    const result = currentValue.flatMap((key) => {
+      switch (key.status) {
         case 'nested':
-          return `${currentIndent}  ${node.key}: ${iter(node.children, depth + 1)}`;
+          return `${currentIndent}  ${key.key}: ${iter(key.children, depth + 1)}`;
 
         case 'deleted':
-          return `${currentIndent}- ${node.key}: ${doStringify(node.value1, depth + 1)}`;
+          return `${currentIndent}- ${key.key}: ${stringify(key.value1, depth + 1)}`;
 
         case 'added':
-          return `${currentIndent}+ ${node.key}: ${doStringify(node.value2, depth + 1)}`;
+          return `${currentIndent}+ ${key.key}: ${stringify(key.value2, depth + 1)}`;
 
         case 'unchanged':
-          return `${currentIndent}  ${node.key}: ${doStringify(node.value1, depth + 1)}`;
+          return `${currentIndent}  ${key.key}: ${stringify(key.value1, depth + 1)}`;
 
         case 'changed':
           return [
-            `${currentIndent}- ${node.key}: ${doStringify(node.value1, depth + 1)}`,
-            `${currentIndent}+ ${node.key}: ${doStringify(node.value2, depth + 1)}`,
+            `${currentIndent}- ${key.key}: ${stringify(key.value1, depth + 1)}`,
+            `${currentIndent}+ ${key.key}: ${stringify(key.value2, depth + 1)}`,
           ];
 
         default:
-          throw new Error(`Unknown type: ${node.status}!`);
+          throw new Error(`Unknown type: ${key.status}!`);
       }
     });
 
-    return ['{', ...lines, `${bracketIndent}}`].join('\n');
+    return [
+      '{',
+      ...result,
+      `${bracketIndent}}`]
+      .join('\n');
   };
 
-  return iter(diff);
+  return iter(astTree);
 };
 
 export default genDiffStylish;

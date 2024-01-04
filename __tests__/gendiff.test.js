@@ -3,9 +3,9 @@ import * as path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import genDiff from '../src/index.js';
-import { getFileExt } from '../src/utils.js';
 import parser from '../src/parser.js';
 import { getValueOf } from '../src/formatters/plain.js';
+import genDiffStylish from '../src/formatters/stylish.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
@@ -15,22 +15,38 @@ const expectedStylish = readFile('expectedStylishFormat.txt').toString();
 const expectedPlain = readFile('expectedPlainFormat.txt').toString();
 const expectedJSON = readFile('expectedJsonFormat.txt').toString();
 
-const cases = [
+const casesStylish = [
   ['json', 'stylish', expectedStylish],
-  ['json', 'plain', expectedPlain],
-  ['json', 'json', expectedJSON],
   ['json', undefined, expectedStylish],
   ['yaml', 'stylish', expectedStylish],
-  ['yaml', 'plain', expectedPlain],
-  ['yaml', 'json', expectedJSON],
   ['yaml', undefined, expectedStylish],
   ['yml', 'stylish', expectedStylish],
-  ['yml', 'plain', expectedPlain],
-  ['yml', 'json', expectedJSON],
   ['yml', undefined, expectedStylish],
 ];
 
-test.each(cases)('test main functionality', (fileExtention, formatName, expected) => {
+const casesPlain = [
+  ['json', 'plain', expectedPlain],
+  ['yaml', 'plain', expectedPlain],
+  ['yml', 'plain', expectedPlain],
+];
+
+const casesJSON = [
+  ['json', 'json', expectedJSON],
+  ['yaml', 'json', expectedJSON],
+  ['yml', 'json', expectedJSON],
+];
+
+test.each(casesPlain)('test plain format', (fileExtention, formatName, expected) => {
+  const actual = genDiff(getFixturePath(`file1.${fileExtention}`), getFixturePath(`file2.${fileExtention}`), formatName);
+  expect(actual).toEqual(expected);
+});
+
+test.each(casesJSON)('test JSON format', (fileExtention, formatName, expected) => {
+  const actual = genDiff(getFixturePath(`file1.${fileExtention}`), getFixturePath(`file2.${fileExtention}`), formatName);
+  expect(actual).toEqual(expected);
+});
+
+test.each(casesStylish)('test stylish format', (fileExtention, formatName, expected) => {
   const actual = genDiff(getFixturePath(`file1.${fileExtention}`), getFixturePath(`file2.${fileExtention}`), formatName);
   expect(actual).toEqual(expected);
 });

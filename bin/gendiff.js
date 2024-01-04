@@ -21,3 +21,4 @@ program.parse();
 
 // node bin/gendiff.js __fixtures__/file1.json __fixtures__/file2.json
 // node bin/gendiff.js --format plain __fixtures__/file1.json __fixtures__/file2.json
+// node bin/gendiff.js -h
