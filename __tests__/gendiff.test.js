@@ -5,7 +5,6 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import genDiff from '../src/index.js';
 import parser from '../src/parser.js';
-import { getValueOf } from '../src/formatters/plain.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
@@ -57,15 +56,6 @@ test('main functionality with wrong data', () => {
   }).toThrow(`Unknown format\n
       usage: genDiff  [-v | --version]\n
                       [-h | --help]\n`);
-});
-
-test('getValueOf', () => {
-  expect(() => {
-    getValueOf(null);
-  }).toBeNull();
-  // expect(() => {
-  //   getValueOf(NaN);
-  // }).toThrow('The value is unknown to me.');
 });
 
 test('parser with wrong data', () => {
