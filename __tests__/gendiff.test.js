@@ -60,9 +60,9 @@ test('main functionality with wrong data', () => {
 });
 
 test('getValueOf', () => {
-  expect(() => {
-    getValueOf(null).toBeNull();
-  });
+  // expect(() => {
+  //   getValueOf(null).toBeNull();
+  // });
   // expect(() => {
   //   getValueOf(NaN);
   // }).toThrow('The value is unknown to me.');
