@@ -12,8 +12,7 @@ export const getValueOf = (value) => {
       }
       return '[complex value]';
     default:
-      return value;
-      // throw new Error('The value is unknown to me.');
+      throw new Error('The value is unknown to me.');
   }
 };
 
