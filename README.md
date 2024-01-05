@@ -11,7 +11,7 @@ This projects was created to compare differences in two files. The program can w
 In order to compare files, run comand bin/gendiff.js and set a paths to two files with one space between them. If you want to choose different format, then stylish, you should write it after path to the second file, for example bin/gendiff.js __fixtures__/file1.json __fixtures__file2.json plain
 
 ### Minimum system requirments
-Computer, monitor, keybord, node.js
+node.js v. 18.0.0 or higher
 
 ## Setup
 In order to setup the game, please run following commands in the command line:
@@ -20,5 +20,5 @@ $ git clone https://github.com/Zyabridos/fullstack-javascript-project-46
  
 $ make install
 
-### Demonstration of comparing two JSON files:
+### Demonstration of installed project
 [![asciicast](https://asciinema.org/a/CXCLBcphIsaYzrSTVk6vlDL4A.svg)](https://asciinema.org/a/CXCLBcphIsaYzrSTVk6vlDL4A)
