@@ -1,3 +1,4 @@
+// @ts-check
 import * as fs from 'fs';
 import * as path from 'path';
 import { dirname } from 'path';
@@ -5,7 +6,6 @@ import { fileURLToPath } from 'url';
 import genDiff from '../src/index.js';
 import parser from '../src/parser.js';
 import { getValueOf } from '../src/formatters/plain.js';
-import genDiffStylish from '../src/formatters/stylish.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
