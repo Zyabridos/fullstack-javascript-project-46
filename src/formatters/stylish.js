@@ -55,7 +55,8 @@ const genDiffStylish = (astTree) => {
           ];
 
         default:
-          throw new Error(`Unknown type: ${key.status}!`);
+          // throw new Error(`Unknown type: ${key.status}!`);
+          return null;
       }
     });
 
